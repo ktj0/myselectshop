@@ -5,6 +5,7 @@ import com.example.myselectshop.dto.ProductRequestDto;
 import com.example.myselectshop.dto.ProductResponseDto;
 import com.example.myselectshop.entity.Product;
 import com.example.myselectshop.repository.ProductRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,7 @@ public class ProductService {
     }
 
     // 관심상품 희망 최저가 등록
+    @Transactional
     public ProductResponseDto updateProduct(Long id, ProductMyPriceRequestDto requestDto) {
         int myprice = requestDto.getMyprice();
 
