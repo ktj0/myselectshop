@@ -7,6 +7,8 @@ import com.example.myselectshop.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class ProductController {
@@ -22,5 +24,11 @@ public class ProductController {
     @PutMapping("/product/{id}")
     public ProductResponseDto updateProduct(@PathVariable Long id, @RequestBody ProductMyPriceRequestDto requestDto) {
         return productService.updateProduct(id, requestDto);
+    }
+
+    // 관심상품 조회하기
+    @GetMapping("/products")
+    public List<ProductResponseDto> getProducts() {
+        return productService.getProducts();
     }
 }
