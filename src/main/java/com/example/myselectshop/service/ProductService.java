@@ -5,6 +5,7 @@ import com.example.myselectshop.dto.ProductMyPriceRequestDto;
 import com.example.myselectshop.dto.ProductRequestDto;
 import com.example.myselectshop.dto.ProductResponseDto;
 import com.example.myselectshop.entity.Product;
+import com.example.myselectshop.entity.User;
 import com.example.myselectshop.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +23,8 @@ public class ProductService {
     public static final int MIN_MY_PRICE = 100;
 
     // 관심상품 등록
-    public ProductResponseDto createdProduct(ProductRequestDto requestDto) {
-        Product product = productRepository.save(new Product(requestDto));
+    public ProductResponseDto createdProduct(ProductRequestDto requestDto, User user) {
+        Product product = productRepository.save(new Product(requestDto, user));
 
         return new ProductResponseDto(product);
     }
@@ -47,8 +48,8 @@ public class ProductService {
     }
 
     // 관심상품 조회하기
-    public List<ProductResponseDto> getProducts() {
-        List<Product> productList = productRepository.findAll();
+    public List<ProductResponseDto> getProducts(User user) {
+        List<Product> productList = productRepository.findAllByUser(user);
         List<ProductResponseDto> responseDtoList = new ArrayList<>();
 
         for (Product product : productList) {
@@ -58,6 +59,7 @@ public class ProductService {
         return responseDtoList;
     }
 
+    // 스케줄러로 상품 최신 가격으로 업데이트
     @Transactional
     public void updateBySearch(Long id, ItemDto itemDto) {
         Product product = productRepository.findById(id).orElseThrow(() ->
@@ -65,5 +67,17 @@ public class ProductService {
         );
 
         product.updateByItemDto(itemDto);
+    }
+
+    // 관리자 조회
+    public List<ProductResponseDto> getAllProducts() {
+        List<Product> productList = productRepository.findAll();
+        List<ProductResponseDto> responseDtoList = new ArrayList<>();
+
+        for (Product product : productList) {
+            responseDtoList.add(new ProductResponseDto(product));
+        }
+
+        return responseDtoList;
     }
 }
